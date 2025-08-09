@@ -44,21 +44,29 @@
     }
   </style>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const subscription_id = params.get('subscription_id');
+  const params = new URLSearchParams(window.location.search);
+  const subscription_id = params.get('subscription_id');
 
-    if (subscription_id) {
-      fetch('https://saas-6ufb.onrender.com/subscription/confirm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subscription_id })
-      });
-    }
+  if (subscription_id) {
+    fetch('https://saas-6ufb.onrender.com/subscription/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription_id })
+    })
+    .then(response => response.json())
+    .then(data => {
+      const status = data.status || 'pending';
+      window.location.href = `saasexpo://assinatura/sucesso?status=${status}&preapproval_id=${subscription_id}`;
+    })
+    .catch(error => {
+      console.error('Erro ao confirmar assinatura:', error);
+      window.location.href = `saasexpo://assinatura/sucesso?status=error&preapproval_id=${subscription_id}`;
+    });
+  } else {
+    window.location.href = `saasexpo://assinatura/sucesso?status=missing_id`;
+  }
+</script>
 
-    setTimeout(() => {
-      window.location.href = `saasexpo://assinatura/sucesso?subscription_id=${subscription_id}`;
-    }, 3000);
-  </script>
 </head>
 <body>
   <h1>Redirecionando para o app...</h1>
