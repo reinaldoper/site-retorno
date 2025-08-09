@@ -3,13 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <title>Redirecionando...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .loader {
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-top: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+  </style>
   <script>
+    const params = new URLSearchParams(window.location.search);
+    const subscription_id = params.get('subscription_id');
+
+    if (subscription_id) {
+      fetch('https://saas-6ufb.onrender.com/subscription/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscription_id })
+      });
+    }
+
     setTimeout(() => {
-      window.location.href = 'saasexpo://assinatura/sucesso';
+      window.location.href = `saasexpo://assinatura/sucesso?subscription_id=${subscription_id}`;
     }, 3000);
   </script>
 </head>
 <body>
-  <p>Redirecionando para o app...</p>
+  <h1>Redirecionando para o app...</h1>
+  <p>Obrigado por confirmar sua assinatura. Você será levado de volta ao aplicativo em instantes.</p>
+  <div class="loader"></div>
 </body>
 </html>
